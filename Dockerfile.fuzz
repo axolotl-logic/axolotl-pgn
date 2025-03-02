@@ -1,0 +1,26 @@
+FROM silkeh/clang
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+        # Build system generator
+        cmake \
+        # Fuzzer
+        afl++ \
+        # Memory profiling
+        valgrind \
+        # Testing 
+        libcriterion-dev \
+        libcriterion3
+
+# Copy only what is needed
+ADD ./src src
+ADD ./CMakeLists.txt .
+ADD ./fuzz fuzz
+ADD ./tests tests
+ADD ./cmake cmake
+
+RUN cmake -DCMAKE_C_COMPILER=afl-cc -S . -B build
+RUN cmake --build build --target axolotl-fuzz
+
+CMD afl-fuzz -S 5 -i fuzz/cases/ -o /app/afl-states build/axolotl-fuzz
