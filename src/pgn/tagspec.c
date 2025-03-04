@@ -9,6 +9,11 @@
 
 #include "common/smalloc.h"
 
+// Do not decrease.
+#define TAGSPEC_MAX_NAME 200
+#define TAGSPEC_MAX_VALUE 200
+#define TAGSPEC_MAX_CMP 20
+
 tagcmp_t *tagcmp_new(const char *name, const char *value, tagcmp_kind_t kind) {
     tagcmp_t *cmp = smalloc(sizeof(*cmp));
 
@@ -28,13 +33,14 @@ tagorder_t *tagorder_new(const char *name) {
 }
 
 void tagorder_free(tagorder_t *tag) {
-    if (tag == NULL) {
-        return;
-    }
+    while (tag != NULL) {
+        tagorder_t *next = tag->next;
 
-    tagorder_free(tag->next);
-    free(tag->name);
-    free(tag);
+        free(tag->name);
+        free(tag);
+
+        tag = next;
+    }
 }
 
 void tagspec_add(tagspec_t *spec, const char *name, const char *value,
@@ -117,11 +123,12 @@ tagcmp_kind_t tagspec_get_kind(char opperator) {
 }
 
 bool tagspec_parse_line(tagspec_t *spec, const char *line) {
-    char *name = calloc(200, 1);
-    char *value = calloc(200, 1);
-    char *cmp = calloc(20, 1);
+    char *name = smalloc(TAGSPEC_MAX_NAME);
+    char *value = smalloc(TAGSPEC_MAX_VALUE);
+    char *cmp = smalloc(TAGSPEC_MAX_VALUE);
 
-    sscanf(line, "%[^\t\n ] %[^\t\n ] %[^\n]", name, cmp, value);
+    int ret = sscanf(line, "%199[^\t\n ] %19[^\t\n ] %199[^\n]", name, cmp, value);
+    assert(ret >= 1 && "pgn line should contain 1 to 3 values");
 
     bool success = false;
     if (name[0] != '\0' && value[0] != '\0') {
