@@ -80,7 +80,17 @@ target_link_libraries(pgne3k-fuzz PUBLIC pgne3k-pgn)
 #
 
 # Add Individual tests here
-add_executable(pgne3k-test tests/common/test_tsv.c)
+add_executable(
+  pgne3k-test
+  tests/common/test_tsv.c
+  tests/common/test_tsv.c
+  tests/pgn/test_symbol.c
+  tests/pgn/test_pgn.c
+  tests/pgn/test_tagspec.c
+  tests/pgn/test_pgn_move.c
+  tests/pgn/test_pgn_tag.c
+  tests/pgn/test_gameclock.c
+  tests/pgn/test_pgn_frontend.c)
 target_link_libraries(pgne3k-test PUBLIC pgne3k-common ${CRITERION_LIBRARY})
 target_link_libraries(pgne3k-test PUBLIC pgne3k-pgn ${CRITERION_LIBRARY})
 add_compile_options(pgne3k-test --coverage)

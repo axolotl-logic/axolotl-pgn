@@ -1,21 +1,16 @@
-#include "pgn_tag.h"
-#include "test.h"
+#include <criterion/criterion.h>
 
-int main(void) {
-    test_start("taglist_t");
+#include "pgn/pgn_tag.h"
 
+Test(taglist,  taglist_add) {
     taglist_t* tags = taglist_new();
-    assert_true(tags);
+    cr_assert_not_null(tags);
 
     taglist_add(tags, "Event", "Fun Fest");
-    assert_true(tags->head != NULL);
+    cr_assert_not_null(tags->head);
 
     taglist_add(tags, "White", "Murphy");
-    assert_true(tags->head->next != NULL);
+    cr_assert_not_null(tags->head->next);
 
     taglist_free(tags);
-
-    test_end();
-
-    return 0;
 }

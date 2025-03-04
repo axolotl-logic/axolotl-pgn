@@ -1,13 +1,11 @@
-#include "pgn_frontend.h"
-#include "test.h"
+#include <criterion/criterion.h>
 
-int main(void) {
-    test_start("pgn_frontend.h");
+#include "pgn/pgn_frontend.h"
 
+Test(pgn_frontend,  pgn_front_end_new) {
     pgn_frontend_t* env = pgn_frontend_new();
-    assert_true(env);
+
+    cr_assert_not_null(env);
 
     pgn_frontend_free(env);
-
-    test_end();
 }

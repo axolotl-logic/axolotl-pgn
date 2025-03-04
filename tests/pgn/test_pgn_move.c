@@ -1,21 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <criterion/criterion.h>
 
-#include "pgn_move.h"
-#include "test.h"
+#include "pgn/pgn_move.h"
 
-int main(void) {
-    test_start("pgn_move.h");
-
+Test(pgn_movelist, pgn_movelist_add) {
     pgn_movelist_t* moves = pgn_movelist_new();
-    assert_true(moves != NULL);
+    cr_assert_not_null(moves);
 
     pgn_movelist_add(moves, PGN_MOVETYPE_MOVE, "e4");
-    assert_true(moves->head != NULL);
+    cr_assert_not_null(moves->head);
 
     pgn_movelist_free(moves);
-
-    test_end();
-
-    return EXIT_SUCCESS;
 }

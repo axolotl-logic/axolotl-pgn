@@ -1,24 +1,18 @@
-#include <stdio.h>
-#include <string.h>
+#include <criterion/criterion.h>
 
-#include "pgn.h"
-#include "test.h"
+#include "pgn/pgn.h"
 
-int main(void) {
-    test_start("pgn.h");
-
+Test(pgn, pgn_add_result) {
     pgnlist_t* pgns = pgnlist_new();
-    assert_true(pgns != NULL);
+    cr_assert_not_null(pgns);
 
     pgnlist_add_result(pgns, "*");
-    assert_true(pgns->head != NULL);
+    cr_assert_not_null(pgns->head);
 
     pgn_t* pgn = pgns->head;
 
-    assert_true(pgn->ply == 0);
-    assert_true(strcmp(pgn->result, "*") == 0);
+    cr_assert_eq(pgn->ply, 0);
+    cr_assert_str_eq(pgn->result, "*");
 
     pgnlist_free(pgns);
-
-    test_end();
 }
