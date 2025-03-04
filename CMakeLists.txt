@@ -4,6 +4,8 @@ project(pgne3k)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(CMAKE_C_CLANG_TIDY clang-tidy -config ${CMAKE_SOURCE_DIR}/.clang-tidy)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 include_directories("${CMAKE_SOURCE_DIR}/src/")
@@ -99,3 +101,11 @@ add_custom_target(docs mkdocs build -f "${CMAKE_SOURCE_DIR}/mkdocs.docs.yml")
 # Build computer generated reports
 add_custom_target(docs-reports mkdocs build -f
                                "${CMAKE_SOURCE_DIR}/mkdocs.reports.yml")
+
+# Linting!
+file(GLOB_RECURSE LINTABLE_FILES "${PROJECT_SOURCE_DIR}/src/*.c"
+     "${PROJECT_SOURCE_DIR}/src/*.h")
+add_custom_target(
+  lint
+  COMMAND clang-tidy -p ${PROJECT_BINARY_DIR} ${LINTABLE_FILES}
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})

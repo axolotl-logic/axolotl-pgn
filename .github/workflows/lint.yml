@@ -1,0 +1,19 @@
+name: Lints
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  build-project:
+    name: Build Project
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4.2.1
+
+      - name: Build Project
+        uses: threeal/cmake-action@v2.0.0
+
+      - name: Run Lints
+        run: make lint 

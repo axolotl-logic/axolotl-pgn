@@ -1,8 +1,13 @@
 #
 # Ours
 #
+
 # Build directory
 build/
+
+# Web dir
+site/
+
 # Program analysis artifacts such as code coverage
 analysis/
 
