@@ -4,8 +4,6 @@ project(pgne3k)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_C_CLANG_TIDY clang-tidy -config ${CMAKE_SOURCE_DIR}/.clang-tidy)
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 include_directories("${CMAKE_SOURCE_DIR}/src/")
