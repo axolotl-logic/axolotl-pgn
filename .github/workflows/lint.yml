@@ -14,8 +14,8 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v4.2.1
 
-      - name: Build Project
-        uses: threeal/cmake-action@v2.0.0
+      - run: mkdir build
+      - run: cmake -B build/
 
       - name: Run Lints
-        run: make lint 
+        run: cmake --build build/ --target lint
