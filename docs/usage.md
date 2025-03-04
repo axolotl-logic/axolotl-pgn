@@ -1,21 +1,14 @@
 # NAME
 
-**axolotl** — prints a tab separated message.
+**pgne3k** — PGN to CSV Converter
 
 # SYNOPSIS
 
-* **axolotl** \[**-h**|**--help**|**-v**|**--version**]
+* **pgne3k** [path/to/tagspec] < multigame.pgn > output.tsv
 
 # DESCRIPTION
 
-Prints a tab separated message regarding the world. 
-
-# OPTIONS
-
-|Alias|Option|Description|
-|-----|------|-----------|
-|-h|--help|Prints brief usage information.|
-|-v|--version|Prints the current version number.|
+Reads a multi-game PGN from STDIN and writes tab separated values to STDOUT.
 
 # AUTHOR
 
