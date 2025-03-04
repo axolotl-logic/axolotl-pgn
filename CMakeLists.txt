@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(axolotl)
+project(pgne3k)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
-add_compile_options(--coverage)
-add_link_options(-lgcov --coverage)
+include_directories("${CMAKE_SOURCE_DIR}/src/")
 
 #
 # Third Party Libraries
@@ -14,32 +15,79 @@ find_package(Criterion)
 include_directories(CRITERION_INCLUDE_DIR)
 
 #
+# Parser Generation
+#
+find_package(BISON)
+find_package(FLEX)
+
+bison_target(
+  PgnParser src/pgn/pgn.syntax.y ${CMAKE_CURRENT_BINARY_DIR}/pgn.syntax.c
+  DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/pgn.syntax.h)
+
+flex_target(PgnScanner src/pgn/pgn.lex.l ${CMAKE_CURRENT_BINARY_DIR}/pgn.lex.c
+            DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/pgn.lex.h)
+
+add_flex_bison_dependency(PgnScanner PgnParser)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+#
 # Interfaces
 #
-add_library(axolotl-common INTERFACE)
-target_sources(axolotl-common PUBLIC src/common/tsv.h src/common/tsv.c)
+add_library(
+  pgne3k-common SHARED
+  src/common/smalloc.c src/common/smalloc.h src/common/symbol.c
+  src/common/symbol.h src/common/tsv.c src/common/tsv.h)
+
+add_library(
+  pgne3k-pgn SHARED
+  ${BISON_PgnParser_OUTPUTS}
+  ${FLEX_PgnScanner_OUTPUTS}
+  src/pgn/gameclock.c
+  src/pgn/gameclock.h
+  src/pgn/generation.c
+  src/pgn/generation.h
+  src/pgn/pgn.c
+  src/pgn/pgn_frontend.c
+  src/pgn/pgn_frontend.h
+  src/pgn/pgn.h
+  src/pgn/pgn.lex.l
+  src/pgn/pgn_move.c
+  src/pgn/pgn_move.h
+  src/pgn/pgn.syntax.y
+  src/pgn/pgn_tag.c
+  src/pgn/pgn_tag.h
+  src/pgn/tagspec.c
+  src/pgn/tagspec.h)
+
+target_link_libraries(pgne3k-pgn PUBLIC pgne3k-common)
 
 #
 # Frontend Executable
 #
-add_executable(axolotl src/main.c)
-target_link_libraries(axolotl axolotl-common)
+add_executable(pgne3k src/main.c)
+target_link_libraries(pgne3k PUBLIC pgne3k-common)
+target_link_libraries(pgne3k PUBLIC pgne3k-pgn)
 
 #
 # Fuzz
 #
-add_executable(axolotl-fuzz fuzz/main.c)
-target_link_libraries(axolotl-fuzz axolotl-common)
+add_executable(pgne3k-fuzz fuzz/main.c)
+target_link_libraries(pgne3k-fuzz PUBLIC pgne3k-common)
+target_link_libraries(pgne3k-fuzz PUBLIC pgne3k-pgn)
 
 #
 # Tests
 #
-add_executable(axolotl-test tests/common/test_tsv.c)
-include_directories(axolotl-test src)
-target_link_libraries(axolotl-test axolotl-common ${CRITERION_LIBRARY})
+
+# Add Individual tests here
+add_executable(pgne3k-test tests/common/test_tsv.c)
+target_link_libraries(pgne3k-test PUBLIC pgne3k-common ${CRITERION_LIBRARY})
+target_link_libraries(pgne3k-test PUBLIC pgne3k-pgn ${CRITERION_LIBRARY})
+add_compile_options(pgne3k-test --coverage)
+add_link_options(pgne3k-test -lgcov --coverage)
 
 enable_testing()
-add_test(NAME axolotl-test COMMAND axolotl-test)
+add_test(NAME pgne3k-test COMMAND pgne3k-test)
 
 #
 # Custom Commands and Targets
