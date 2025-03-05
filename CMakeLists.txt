@@ -80,23 +80,16 @@ target_link_libraries(pgne3k PUBLIC pgne3k-pgn)
 # Fuzz
 #
 add_executable(pgne3k-fuzz fuzz/main.c)
-target_link_libraries(pgne3k-fuzz PUBLIC pgne3k-common)
-target_link_libraries(pgne3k-fuzz PUBLIC pgne3k-pgn)
+target_link_libraries(pgne3k-fuzz PUBLIC pgne3k-common pgne3k-pgn)
 
 #
 # Tests
 #
-
-# Add Individual tests here
-add_executable(pgne3k-test-common tests/common/test_tsv.c
-                                  tests/common/test_tsv.c)
-target_link_libraries(pgne3k-test-common PUBLIC pgne3k-common
-                                                ${CRITERION_LIBRARY})
-add_compile_options(pgne3k-test-common --coverage)
-add_link_options(pgne3k-test-common -lgcov --coverage)
-
 add_executable(
-  pgne3k-test-pgn
+  pgne3k-test
+  tests/common/test_satoi.c
+  tests/common/test_tsv.c
+  tests/common/test_scan_ssv.c
   tests/pgn/test_symbol.c
   tests/pgn/test_pgn.c
   tests/pgn/test_tagspec.c
@@ -104,14 +97,15 @@ add_executable(
   tests/pgn/test_pgn_tag.c
   tests/pgn/test_gameclock.c
   tests/pgn/test_pgn_frontend.c)
-target_link_libraries(pgne3k-test-pgn PUBLIC pgne3k-common ${CRITERION_LIBRARY})
-target_link_libraries(pgne3k-test-pgn PUBLIC pgne3k-pgn ${CRITERION_LIBRARY})
-add_compile_options(pgne3k-test-pgn --coverage)
-add_link_options(pgne3k-test-pgn -lgcov --coverage)
+
+target_link_libraries(pgne3k-test PUBLIC pgne3k-pgn pgne3k-common
+                                         ${CRITERION_LIBRARY})
+
+add_compile_options(pgne3k-test --coverage)
+add_link_options(pgne3k-test -lgcov --coverage)
 
 enable_testing()
-add_test(NAME pgne3k-test-common COMMAND pgne3k-test-common)
-add_test(NAME pgne3k-test-pgn COMMAND pgne3k-test-pgn)
+add_test(NAME pgne3k-test COMMAND pgne3k-test)
 
 #
 # Custom Commands and Targets
