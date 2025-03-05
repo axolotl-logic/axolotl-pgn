@@ -35,8 +35,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 #
 add_library(
   pgne3k-common SHARED
-  src/common/smalloc.c src/common/smalloc.h src/common/symbol.c
-  src/common/symbol.h src/common/tsv.c src/common/tsv.h)
+  src/common/smalloc.c
+  src/common/smalloc.h
+  src/common/symbol.c
+  src/common/symbol.h
+  src/common/tsv.c
+  src/common/tsv.h
+  src/common/scan_ssv.c
+  src/common/scan_ssv.h
+  src/common/satoi.h
+  src/common/satoi.c)
 
 add_library(
   pgne3k-pgn SHARED
@@ -80,10 +88,15 @@ target_link_libraries(pgne3k-fuzz PUBLIC pgne3k-pgn)
 #
 
 # Add Individual tests here
+add_executable(pgne3k-test-common tests/common/test_tsv.c
+                                  tests/common/test_tsv.c)
+target_link_libraries(pgne3k-test-common PUBLIC pgne3k-common
+                                                ${CRITERION_LIBRARY})
+add_compile_options(pgne3k-test-common --coverage)
+add_link_options(pgne3k-test-common -lgcov --coverage)
+
 add_executable(
-  pgne3k-test
-  tests/common/test_tsv.c
-  tests/common/test_tsv.c
+  pgne3k-test-pgn
   tests/pgn/test_symbol.c
   tests/pgn/test_pgn.c
   tests/pgn/test_tagspec.c
@@ -91,13 +104,14 @@ add_executable(
   tests/pgn/test_pgn_tag.c
   tests/pgn/test_gameclock.c
   tests/pgn/test_pgn_frontend.c)
-target_link_libraries(pgne3k-test PUBLIC pgne3k-common ${CRITERION_LIBRARY})
-target_link_libraries(pgne3k-test PUBLIC pgne3k-pgn ${CRITERION_LIBRARY})
-add_compile_options(pgne3k-test --coverage)
-add_link_options(pgne3k-test -lgcov --coverage)
+target_link_libraries(pgne3k-test-pgn PUBLIC pgne3k-common ${CRITERION_LIBRARY})
+target_link_libraries(pgne3k-test-pgn PUBLIC pgne3k-pgn ${CRITERION_LIBRARY})
+add_compile_options(pgne3k-test-pgn --coverage)
+add_link_options(pgne3k-test-pgn -lgcov --coverage)
 
 enable_testing()
-add_test(NAME pgne3k-test COMMAND pgne3k-test)
+add_test(NAME pgne3k-test-common COMMAND pgne3k-test-common)
+add_test(NAME pgne3k-test-pgn COMMAND pgne3k-test-pgn)
 
 #
 # Custom Commands and Targets

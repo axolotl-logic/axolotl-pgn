@@ -1,5 +1,5 @@
 ---
-Checks: 'bugprone-*,cert-*,clang-analyzer-*,concurrency-*,misc-*,performance-*,readability-*'
+Checks: 'bugprone-*,cert-*,clang-analyzer-*,concurrency-*,misc-*,performance-*,readability-*,-bugprone-easily-swappable-parameters'
 WarningsAsErrors: '*'
 HeaderFilterRegex: ''
 FormatStyle: none

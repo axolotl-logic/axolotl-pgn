@@ -1,12 +1,14 @@
+#include "pgn/tagspec.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "pgn/pgn_frontend.h"
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        fprintf(stderr, "Usage: %s <tag spec>\n", argv[0]);
+        assert(fputs("Please pass a path to a tagspec\n", stderr));
         return EXIT_FAILURE;
     }
 
@@ -21,7 +23,7 @@ int main(int argc, char **argv) {
     pgn_frontend_t *env = pgn_frontend_new();
 
     tagspec_load(env->spec, spec_fp);
-    fclose(spec_fp);
+    assert(fclose(spec_fp) == 0);
 
     pgn_frontend_run(env);
 

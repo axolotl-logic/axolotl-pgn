@@ -2,6 +2,7 @@
 #define DISPLAY_H
 
 #include "pgn.h"
+#include "tagspec.h"
 
 void print_pgn(tagspec_t *spec, pgn_t *pgn);
 void print_headers(tagspec_t *spec);

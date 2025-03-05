@@ -1,5 +1,6 @@
 #include "gameclock.h"
 
+#include "common/satoi.h"
 #include <stdlib.h>
 #include <strings.h>
 
@@ -20,7 +21,7 @@ int parse_timestamp(const char* h_m_s) {
     // Foreach chunk
     const char* head = h_m_s;
     for (int i = 0; i < 3; i++) {
-        int chunk = atoi(head);
+        int chunk = satoi(head);
         int multiplier = (2 - i) * GAMECLOCK_MINUTE;
         if (multiplier != 0) {
             chunk *= multiplier;

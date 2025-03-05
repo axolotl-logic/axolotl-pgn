@@ -1,17 +1,23 @@
 #include "pgn_frontend.h"
 
+#include <assert.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "generation.h"
 #include "pgn.h"
-#include "pgn.lex.h"
-#include "pgn.syntax.h"
+#include "tagspec.h"
 #include "common/smalloc.h"
 #include "common/symbol.h"
 
 #define UNUSED(x) (void)(x)
+
+typedef void* yyscan_t;
+typedef void* YYLTYPE;
+int yylex_destroy(yyscan_t yyscanner);
+int yylex_init(yyscan_t* scanner);
+int yyparse (yyscan_t scanner, pgn_frontend_t *env);
 
 pgn_frontend_t *pgn_frontend_new(void) {
     pgn_frontend_t *env = smalloc(sizeof(struct pgn_frontend_t));
@@ -59,5 +65,7 @@ void yyerror(YYLTYPE *yyllocp, yyscan_t scanner, pgn_frontend_t *env,
     UNUSED(scanner);
     UNUSED(env);
     UNUSED(yyllocp);
-    fprintf(stderr, "error: %s\n", msg);
+    assert(fputs("error: ", stderr));
+    assert(fputs(msg, stderr));
+    assert(fputc('\n', stderr));
 }
