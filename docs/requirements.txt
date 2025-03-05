@@ -1,2 +1,3 @@
-mkdocs-terminal
-python-markdown-math
+mkdocs==1.6.1
+mkdocs-terminal==4.7.0
+python-markdown-math==0.8
