@@ -15,7 +15,7 @@ tagcmp_t *tagcmp_new(const char *name, const char *value, tagcmp_kind_t kind)
         tagcmp_t *cmp = smalloc(sizeof(*cmp));
 
         cmp->name = strdup(name);
-        cmp->value = strdup(value);
+        cmp->value = value == NULL ? NULL : strdup(value);
         cmp->kind = kind;
 
         return cmp;
@@ -45,16 +45,14 @@ void tagorder_free(tagorder_t *tag)
 void tagspec_add(tagspec_t *spec, const char *name, const char *value,
                  tagcmp_kind_t kind)
 {
-        if (kind != TAG_ALWAYS) {
-                tagcmp_t *cmp = tagcmp_new(name, value, kind);
+        tagcmp_t *cmp = tagcmp_new(name, value, kind);
 
-                if (spec->head == NULL) {
-                        spec->head = cmp;
-                        spec->tail = cmp;
-                } else {
-                        spec->tail->next = cmp;
-                        spec->tail = spec->tail->next;
-                }
+        if (spec->head == NULL) {
+                spec->head = cmp;
+                spec->tail = cmp;
+        } else {
+                spec->tail->next = cmp;
+                spec->tail = spec->tail->next;
         }
 
         tagorder_t *tag = tagorder_new(name);
@@ -135,7 +133,7 @@ bool tagspec_parse_line(tagspec_t *spec, const char *line)
         char *save_ptr = NULL;
         char *name = strtok_r(line_copy, " ", &save_ptr);
         char *cmp = strtok_r(NULL, " ", &save_ptr);
-        char *value = strtok_r(NULL, " ", &save_ptr);
+        char *value = strtok_r(NULL, "\n", &save_ptr);
 
         tagcmp_kind_t kind = cmp == NULL ? TAG_ALWAYS :
                                            tagspec_get_kind(cmp[0]);
@@ -146,7 +144,7 @@ bool tagspec_parse_line(tagspec_t *spec, const char *line)
 
         tagspec_add(spec, name, value, kind);
 
-        return false;
+        return true;
 }
 
 void tagspec_load(tagspec_t *spec, FILE *spec_fp)
