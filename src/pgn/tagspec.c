@@ -129,7 +129,6 @@ bool tagspec_parse_line(tagspec_t *spec, const char *line)
         char line_copy[TAGSPEC_FIELD_SIZE * 3] = { '\0' };
 
         strncpy(line_copy, line, sizeof(line_copy) / sizeof(line_copy[0]));
-
         char *save_ptr = NULL;
         char *name = strtok_r(line_copy, " ", &save_ptr);
         char *cmp = strtok_r(NULL, " ", &save_ptr);
