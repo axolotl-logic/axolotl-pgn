@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#define TAGSPEC_FIELD_SIZE 200
+#define TAGSPEC_LINE_SIZE 3 * TAGSPEC_FIELD_SIZE
+
 typedef enum tagcmp_kind {
     TAG_EQUALS = 0,
     TAG_NOT_EQUALS,

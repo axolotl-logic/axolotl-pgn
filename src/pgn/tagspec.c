@@ -1,6 +1,5 @@
 #include "tagspec.h"
 
-#include "common/scan_ssv.h"
 #include <assert.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -129,32 +128,25 @@ tagcmp_kind_t tagspec_get_kind(char opperator)
 
 bool tagspec_parse_line(tagspec_t *spec, const char *line)
 {
-        size_t cursor = 0;
-        char *name = scan_ssv(line, &cursor);
-        char *cmp = scan_ssv(line, &cursor);
-        char *value = scan_ssv(line, &cursor);
+        char line_copy[TAGSPEC_FIELD_SIZE * 3] = { '\0' };
 
-        bool success = false;
-        if (name[0] != '\0' && value[0] != '\0') {
-                assert(cmp[0] != '\0');
-                tagcmp_kind_t kind = tagspec_get_kind(cmp[0]);
-                if (kind != TAG_UNKNOWN_CMP) {
-                        tagspec_add(spec, name, value, kind);
-                        success = true;
-                }
-        } else if (name[0] != '\0') {
-                tagspec_add(spec, name, NULL, TAG_ALWAYS);
-                success = true;
-        } else {
-                assert(false &&
-                       "in tagspec, specify only name OR name, operator, and value");
+        strncpy(line_copy, line, sizeof(line_copy) / sizeof(line_copy[0]));
+
+        char *save_ptr = NULL;
+        char *name = strtok_r(line_copy, " ", &save_ptr);
+        char *cmp = strtok_r(NULL, " ", &save_ptr);
+        char *value = strtok_r(NULL, " ", &save_ptr);
+
+        tagcmp_kind_t kind = cmp == NULL ? TAG_ALWAYS :
+                                           tagspec_get_kind(cmp[0]);
+
+        if (kind == TAG_UNKNOWN_CMP) {
+                return false;
         }
 
-        free(name);
-        free(value);
-        free(cmp);
+        tagspec_add(spec, name, value, kind);
 
-        return success;
+        return false;
 }
 
 void tagspec_load(tagspec_t *spec, FILE *spec_fp)
@@ -162,7 +154,8 @@ void tagspec_load(tagspec_t *spec, FILE *spec_fp)
         char *line = NULL;
         size_t line_len = 0;
         while (getline(&line, &line_len, spec_fp) != -1) {
-                assert(tagspec_parse_line(spec, line));
+                bool success = tagspec_parse_line(spec, line);
+                assert(success);
         }
 
         free(line);
@@ -187,6 +180,8 @@ bool tagspec_matches_value(const tagcmp_t *cmp, const char *value)
                 assert(fputs("Unknown operator", stderr));
                 assert(false && "unimplemented");
         }
+
+        return false;
 }
 
 bool tagspec_matches(tagspec_t *spec, const char *name, const char *value)
