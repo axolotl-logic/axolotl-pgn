@@ -8,17 +8,22 @@
 void tsv_fprint(FILE *out_fp, size_t n, const char **row)
 {
         bool first = true;
+        int ret;
         for (size_t i = 0; i < n; i++) {
-                if (!first) {
-                        assert(fputc('\t', out_fp) != EOF);
-                } else {
+                if (first) {
                         first = false;
+                } else {
+                        ret = fputc('\t', out_fp);
+                        assert(ret != EOF &&
+                               "writing tsv row tab character failed");
                 }
 
                 const char *value = row[i];
-                assert(fputs(value, out_fp));
+                ret = fputs(value, out_fp);
+                assert(ret != EOF && "writing tsv value failed");
         }
 
         // Conclude with a newline.
-        assert(fputc('\n', out_fp) != EOF);
+        ret = fputc('\n', out_fp);
+        assert(ret != EOF && "writing tsv row newline failed");
 }
