@@ -41,8 +41,6 @@ add_library(
   src/common/symbol.h
   src/common/tsv.c
   src/common/tsv.h
-  src/common/scan_ssv.c
-  src/common/scan_ssv.h
   src/common/satoi.h
   src/common/satoi.c)
 
@@ -89,7 +87,6 @@ add_executable(
   pgne3k-test
   tests/common/test_satoi.c
   tests/common/test_tsv.c
-  tests/common/test_scan_ssv.c
   tests/pgn/test_symbol.c
   tests/pgn/test_pgn.c
   tests/pgn/test_tagspec.c
