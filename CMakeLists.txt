@@ -87,6 +87,8 @@ target_link_libraries(pgne3k-fuzz PUBLIC pgne3k-common pgne3k-pgn)
 #
 add_executable(
   pgne3k-test
+  tests/test_helpers.c
+  tests/test_helpers.h
   tests/common/test_satoi.c
   tests/common/test_tsv.c
   tests/pgn/test_symbol.c
@@ -99,6 +101,7 @@ add_executable(
 
 target_link_libraries(pgne3k-test PUBLIC pgne3k-pgn pgne3k-common
                                          ${CRITERION_LIBRARY})
+target_include_directories(pgne3k-test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
 
 add_compile_options(pgne3k-test --coverage)
 add_link_options(pgne3k-test -lgcov --coverage)

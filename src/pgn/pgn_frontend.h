@@ -2,6 +2,9 @@
 #define PGN_PGN_FRONTEND_H
 
 #include "pgn.h"
+
+#include <stdio.h>
+
 #include "common/symbol.h"
 #include "tagspec.h"
 
@@ -17,6 +20,6 @@ pgn_frontend_t* pgn_frontend_new(void);
 /* Deallocates pgn_frontend */
 void pgn_frontend_free(pgn_frontend_t* env);
 
-void pgn_frontend_run(pgn_frontend_t* env);
+void pgn_frontend_run(pgn_frontend_t* env, FILE* in_fp);
 
 #endif

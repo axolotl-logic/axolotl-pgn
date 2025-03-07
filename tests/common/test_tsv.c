@@ -3,12 +3,7 @@
 #include <stdio.h>
 
 #include "common/tsv.h"
-
-void redirect_stdout(void)
-{
-        setbuf(stdout, NULL);
-        cr_redirect_stdout();
-}
+#include "test_helpers.h"
 
 Test(tsv, tsv_fprint, .init = redirect_stdout, .timeout = 1)
 {

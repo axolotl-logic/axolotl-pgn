@@ -3,6 +3,7 @@
 #include "common/io.h"
 #include <assert.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "generation.h"
@@ -18,6 +19,7 @@ typedef void *YYLTYPE;
 int yylex_destroy(yyscan_t yyscanner);
 int yylex_init(yyscan_t *scanner);
 int yyparse(yyscan_t scanner, pgn_frontend_t *env);
+void yyset_in(FILE *_in_str, yyscan_t yyscanner);
 
 pgn_frontend_t *pgn_frontend_new(void)
 {
@@ -39,12 +41,13 @@ void pgn_frontend_free(pgn_frontend_t *env)
         free(env);
 }
 
-void pgn_frontend_run(pgn_frontend_t *env)
+void pgn_frontend_run(pgn_frontend_t *env, FILE *in_fp)
 {
         print_headers(env->spec);
 
         yyscan_t scanner;
         yylex_init(&scanner);
+        yyset_in(in_fp, scanner);
         // Parse into the pgns list.
         yyparse(scanner, env);
         yylex_destroy(scanner);

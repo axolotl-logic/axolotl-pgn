@@ -3,6 +3,15 @@
 #include <assert.h>
 #include <stdio.h>
 
+int io_disable_buff(FILE *file)
+{
+        int ret = setvbuf(file, NULL, _IONBF, 0);
+
+        assert(ret == 0 && "Failed to disable buffer");
+
+        return ret;
+}
+
 int io_putc(FILE *out_fp, char out_value)
 {
         int ret = fputc(out_value, out_fp);

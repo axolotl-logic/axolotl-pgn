@@ -129,11 +129,11 @@ bool tagspec_parse_line(tagspec_t *spec, const char *line)
         char line_copy[TAGSPEC_FIELD_SIZE * 3] = { '\0' };
         for (size_t i = 0; i < (sizeof(line_copy) / sizeof(line_copy[0]));
              i++) {
-                line_copy[i] = line[i];
-
-                if (line[i] == '\0') {
+                if (line[i] == '\0' || line[i] == '\n') {
                         break;
                 }
+
+                line_copy[i] = line[i];
         }
 
         char *save_ptr = NULL;
