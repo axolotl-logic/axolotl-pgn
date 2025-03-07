@@ -5,25 +5,23 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#include "io.h"
+
 void tsv_fprint(FILE *out_fp, size_t n, const char **row)
 {
         bool first = true;
+
         int ret;
         for (size_t i = 0; i < n; i++) {
                 if (first) {
                         first = false;
                 } else {
-                        ret = fputc('\t', out_fp);
-                        assert(ret != EOF &&
-                               "writing tsv row tab character failed");
+                        io_putc(out_fp, '\t');
                 }
 
-                const char *value = row[i];
-                ret = fputs(value, out_fp);
-                assert(ret != EOF && "writing tsv value failed");
+                io_puts(out_fp, row[i]);
         }
 
         // Conclude with a newline.
-        ret = fputc('\n', out_fp);
-        assert(ret != EOF && "writing tsv row newline failed");
+        io_putc(out_fp, '\n');
 }

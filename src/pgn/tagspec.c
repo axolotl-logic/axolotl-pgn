@@ -127,8 +127,15 @@ tagcmp_kind_t tagspec_get_kind(char opperator)
 bool tagspec_parse_line(tagspec_t *spec, const char *line)
 {
         char line_copy[TAGSPEC_FIELD_SIZE * 3] = { '\0' };
+        for (size_t i = 0; i < (sizeof(line_copy) / sizeof(line_copy[0]));
+             i++) {
+                line_copy[i] = line[i];
 
-        strncpy(line_copy, line, sizeof(line_copy) / sizeof(line_copy[0]));
+                if (line[i] == '\0') {
+                        break;
+                }
+        }
+
         char *save_ptr = NULL;
         char *name = strtok_r(line_copy, " ", &save_ptr);
         char *cmp = strtok_r(NULL, " ", &save_ptr);

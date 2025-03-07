@@ -41,6 +41,8 @@ add_library(
   src/common/symbol.h
   src/common/tsv.c
   src/common/tsv.h
+  src/common/io.c
+  src/common/io.h
   src/common/satoi.h
   src/common/satoi.c)
 
