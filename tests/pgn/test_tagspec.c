@@ -33,12 +33,12 @@ Test(tagspec, tagspec_parse_line)
         tagspec_t *spec = tagspec_new();
         cr_assert(tagspec_parse_line(spec, "BlackElo\n"));
         cr_assert_not_null(spec->tail);
-        cr_expect_str_eq(spec->tail->name, "BlackElo");
-        cr_expect_eq(spec->tail->kind, TAG_ALWAYS);
+        cr_assert_str_eq(spec->tail->name, "BlackElo");
+        cr_assert_eq(spec->tail->kind, TAG_ALWAYS);
 
-        cr_expect(tagspec_parse_line(spec, "Ply > 3\n"));
-        cr_expect_str_eq(spec->tail->name, "Ply");
-        cr_expect_eq(spec->tail->kind, TAG_GREATER_THAN);
+        cr_assert(tagspec_parse_line(spec, "Ply > 3\n"));
+        cr_assert(spec->tail->name, "Ply");
+        cr_assert_eq(spec->tail->kind, TAG_GREATER_THAN);
 
         tagspec_free(spec);
 }
