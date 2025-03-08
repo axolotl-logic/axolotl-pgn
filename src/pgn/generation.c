@@ -1,5 +1,6 @@
 #include "generation.h"
 
+#include "common/io.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -11,11 +12,18 @@
 
 void print_headers(tagspec_t *spec)
 {
+        bool first = true;
         for (tagorder_t *tag = spec->order_head; tag != NULL; tag = tag->next) {
-                printf("%s\t", tag->name);
+                if (first) {
+                        first = false;
+                } else {
+                        io_putc(stdout, '\t');
+                }
+
+                io_puts(stdout, tag->name);
         }
 
-        printf("\n");
+        io_putc(stdout, '\n');
 }
 
 void print_moves(pgn_move_t *moves_head)
@@ -24,10 +32,10 @@ void print_moves(pgn_move_t *moves_head)
         for (pgn_move_t *move = moves_head; move != NULL; move = move->next) {
                 if (move->kind == PGN_MOVETYPE_MOVE) {
                         if (ply++ > 0) {
-                                printf(" ");
+                                io_putc(stdout, ' ');
                         }
 
-                        printf("%s", move->value);
+                        io_puts(stdout, move->value);
                 }
         }
 }
@@ -36,7 +44,7 @@ void print_clock(gameclock_t *clock)
 {
         for (timestamp_t *ts = clock->head; ts != NULL; ts = ts->next) {
                 if (ts != clock->head) {
-                        printf(" ");
+                        io_putc(stdout, ' ');
                 }
 
                 printf("%d", ts->time);
@@ -61,9 +69,12 @@ void print_pgn(tagspec_t *spec, pgn_t *pgn)
         }
 
         taglist_t *aligned_tags = taglist_new_aligned(pgn->tags, spec);
+        bool first = true;
         for (tag_t *tag = aligned_tags->head; tag != NULL; tag = tag->next) {
-                if (aligned_tags->head != tag) {
-                        printf("\t");
+                if (first) {
+                        first = false;
+                } else {
+                        io_putc(stdout, '\t');
                 }
 
                 if (strcmp(tag->name, "Moves") == 0) {
@@ -76,13 +87,13 @@ void print_pgn(tagspec_t *spec, pgn_t *pgn)
                         print_clock(pgn->clock_black);
                 } else if (tag->value == NULL &&
                            strcmp(tag->name, "Result") == 0) {
-                        printf("%s", pgn->result);
+                        io_puts(stdout, pgn->result);
                 } else if (tag->value != NULL) {
-                        printf("%s", tag->value);
+                        io_puts(stdout, tag->value);
                 }
         }
 
-        printf("\n");
+        io_putc(stdout, '\n');
 
         taglist_free(aligned_tags);
 }

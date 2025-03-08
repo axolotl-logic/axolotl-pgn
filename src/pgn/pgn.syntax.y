@@ -42,6 +42,7 @@
 
   void yyerror(YYLTYPE *yyloc, yyscan_t unused, pgn_frontend_t *env,
              const char *msg);
+
   void flush_pgns(pgn_frontend_t *env);
 }
 

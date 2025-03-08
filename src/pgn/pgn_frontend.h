@@ -21,5 +21,6 @@ pgn_frontend_t* pgn_frontend_new(void);
 void pgn_frontend_free(pgn_frontend_t* env);
 
 void pgn_frontend_run(pgn_frontend_t* env, FILE* in_fp);
+void pgn_frontend_run_str(pgn_frontend_t* env, const char* in_str);
 
 #endif

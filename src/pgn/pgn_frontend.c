@@ -16,10 +16,13 @@
 
 typedef void *yyscan_t;
 typedef void *YYLTYPE;
+typedef void *YY_BUFFER_STATE;
+
 int yylex_destroy(yyscan_t yyscanner);
 int yylex_init(yyscan_t *scanner);
 int yyparse(yyscan_t scanner, pgn_frontend_t *env);
 void yyset_in(FILE *_in_str, yyscan_t yyscanner);
+YY_BUFFER_STATE yy_scan_string(const char *yy_str, yyscan_t yyscanner);
 
 pgn_frontend_t *pgn_frontend_new(void)
 {
@@ -49,6 +52,17 @@ void pgn_frontend_run(pgn_frontend_t *env, FILE *in_fp)
         yylex_init(&scanner);
         yyset_in(in_fp, scanner);
         // Parse into the pgns list.
+        yyparse(scanner, env);
+        yylex_destroy(scanner);
+}
+
+void pgn_frontend_run_str(pgn_frontend_t *env, const char *in_str)
+{
+        print_headers(env->spec);
+
+        yyscan_t scanner;
+        yylex_init(&scanner);
+        yy_scan_string(in_str, scanner);
         yyparse(scanner, env);
         yylex_destroy(scanner);
 }
