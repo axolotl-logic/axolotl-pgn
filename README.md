@@ -2,7 +2,7 @@
 
 ## Overview
 
-Convert *HUGE* multi-game PGNs to TSVs (CSVs with tabs). This utility was built
+Convert *HUGE* multi-game PGNs to TSVs (CSVs with tabs)  with this utility. This utility was built
 specifically to process Lichess monthly game dumps which are
 ~90 million games in length.
 
