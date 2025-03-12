@@ -1,4 +1,4 @@
-# pgne3k - Convert multi-game PGNs to CSVs
+# pgn-to-csv - Convert multi-game PGNs to CSVs
 
 ## Overview
 
@@ -6,7 +6,8 @@ Convert *HUGE* multi-game PGNs to TSVs (CSVs with tabs). This utility was built
 specifically to process Lichess monthly game dumps which are
 ~90 million games in length.
 
-Supports extracting clock times and filtering on minimum ply and tag values.
+Supports extracting clock times and filtering on minimum ply and tag values
+among other things.
 
 ## Project Health  [![Tests](https://github.com/axolotl-logic/pgne3k/actions/workflows/test.yml/badge.svg)](https://github.com/axolotl-logic/pgne3k/actions/workflows/test.yml) [![Lints](https://github.com/axolotl-logic/pgne3k/actions/workflows/lint.yml/badge.svg)](https://github.com/axolotl-logic/pgne3k/actions/workflows/lint.yml) [![Docs](https://github.com/axolotl-logic/pgne3k/actions/workflows/docs.yml/badge.svg)](https://github.com/axolotl-logic/pgne3k/actions/workflows/docs.yml)
 
@@ -14,7 +15,7 @@ This project is actively used and maintained, but is also under heavy developmen
 
 If the three badges above are green, the `main` branch is suitable for use.
 
-## Quickstart
+## Tagspecs
 
 In order to run this tool, you need to create a "tagspec" and allows you to filter
 games and also specify what columns you are interested in.
