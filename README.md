@@ -46,6 +46,14 @@ By supplying the tool with this file:
 - Exclude events with the word "Bullet" in them.
 - Exclude incomplete games.
 
+## Install
+
+### Dependencies
+
+```
+sudo apt install flex bison libcriterion-dev libcriterion3
+```
+
 ## See Also
 
 [Full Documentation](https://pgne3k.axolotl-logic.io/)
