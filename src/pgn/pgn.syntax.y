@@ -95,9 +95,9 @@ comment_parts
   | comment_parts CLOCK {
       pgn_t *pgn = env->pgns->tail;
       if (pgn->ply % 2 == 0) {
-        gameclock_add(pgn->clock_black, $2);
-      } else {
         gameclock_add(pgn->clock_white, $2);
+      } else {
+        gameclock_add(pgn->clock_black, $2);
       }
 
       pgn_movelist_add(env->pgns->tail->moves, PGN_MOVETYPE_CLOCK, $2);
